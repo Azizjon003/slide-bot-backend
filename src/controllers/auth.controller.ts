@@ -21,7 +21,7 @@ export const getAuthToken = async (
     }
 
     console.log(session);
-    const user = await prisma.session.findFirst({
+    let user = await prisma.session.findFirst({
       where: {
         id: session.session_id,
       },
@@ -41,6 +41,28 @@ export const getAuthToken = async (
     if (!user) {
       throw new CustomError("User not found", 404);
     }
+    await prisma.session.delete({
+      where: {
+        id: session.session_id,
+      },
+    });
+
+    user = await prisma.session.create({
+      data: {
+        user_id: user.user.id,
+      },
+      include: {
+        user: {
+          include: {
+            user: {
+              include: {
+                wallet: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
     const generateTokens = generateToken({
       session_id: user.id,
