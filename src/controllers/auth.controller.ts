@@ -68,17 +68,12 @@ export const getAuthToken = async (
       session_id: user.id,
     });
 
-    const userData = {
-      name: user.user.name,
-      email: user.user.email,
-      id: user.user.id,
-      created_at: user.user.created_at,
-      balance: user.user?.user.wallet?.balance,
-    };
-    res.cookie("token", generateTokens, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+    const userData = getUser(user);
+    res.cookie("access-token", generateTokens, {
+      httpOnly: false,
+      secure: true,
       sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24,
     });
 
     res.status(200).json({
@@ -89,4 +84,65 @@ export const getAuthToken = async (
   } catch (error) {
     next(error);
   }
+};
+
+export const getMe = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const session = req.session;
+    const userProfileData = getUser(session);
+
+    res.status(200).json({
+      message: "User profile fetched successfully",
+      data: userProfileData,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const session = req.session;
+    if (!session) {
+      throw new CustomError("Session not found", 404);
+    }
+
+    await prisma.session.delete({
+      where: {
+        id: session.id,
+      },
+    });
+    await res.cookie("access-token", "", {
+      httpOnly: false,
+      secure: true,
+      sameSite: "none",
+      maxAge: 0,
+    });
+
+    await res.status(200).json({
+      message: "User logged out successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const getUser = (user: any) => {
+  return {
+    name: user.user.name,
+    email: user.user.email,
+    id: user.user.id,
+    created_at: user.user.created_at,
+    balance: user.user?.user.wallet?.balance,
+  };
 };

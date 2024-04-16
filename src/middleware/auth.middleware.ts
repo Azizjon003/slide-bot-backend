@@ -23,11 +23,12 @@ export default async function AuthMiddleware(
     let token: any = req.headers.authorization;
 
     console.log(token);
-    if (!token) {
-      throw new CustomError("Authorization header is not present", 401);
-    }
+    // if (!token) {
+    //   throw new CustomError("Authorization header is not present", 401);
+    // }
 
-    token = token?.split(" ")[1];
+    console.log(req.cookies, token?.split(" ")[1] === "null");
+    token = token?.split(" ")[1] || req?.cookies["access-token"];
 
     if (!token) {
       // If the Authorization header is not present, return an error response
