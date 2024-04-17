@@ -57,8 +57,48 @@ export const getOne = async (
 ) => {
   try {
     const id = await GeneralValidations.idValidations(req.params.id);
+
+    console.log(id);
+    const prezentationData = await prisma.chat.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    console.log(prezentationData);
+    if (!prezentationData) {
+      throw new CustomError("data not found", 404);
+    }
+
+    const plansAndDescription = await prisma.plan.findMany({
+      where: {
+        chat_id: id,
+      },
+      include: {
+        description: true,
+      },
+    });
+
+    if (plansAndDescription?.length === 0) {
+      throw new CustomError("data not found", 404);
+    }
+    let renderPlans = plansAndDescription.map((item) => {
+      return prezenationPlansRenderItems(item);
+    });
+
+    res.status(200).json({
+      data: {
+        id: prezentationData.id,
+        name: prezentationData.name,
+        pagesCount: prezentationData.pageCount,
+        lang: prezentationData.lang,
+        created_at: prezentationData.created_at,
+        plans: renderPlans,
+      },
+    });
   } catch (error) {
     console.log(error);
+    next(error);
   }
 };
 
@@ -69,5 +109,19 @@ const prezenationRenderItems = (item: any) => {
     pagesCount: item.pageCount,
     lang: item.lang,
     created_at: item.created_at,
+  };
+};
+
+const prezenationPlansRenderItems = (item: any) => {
+  return {
+    name: item.name,
+    id: item.id,
+    description: item.description.map((item: any) => {
+      return {
+        name: item.name,
+        content: item.content,
+      };
+    }),
+    created_at: item.createdAt,
   };
 };
