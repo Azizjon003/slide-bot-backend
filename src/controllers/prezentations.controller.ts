@@ -15,35 +15,63 @@ export const getAll = async (
     const { page, limit, search } = await Validations.createUserValidation(
       req.query
     );
-    const prezentationsCount = await prisma.chat.count({
-      where: {
-        name: {
-          contains: search,
+
+    if (search === "new") {
+      const prezentationsCount = await prisma.chat.count({
+        orderBy: {
+          created_at: "desc",
         },
-      },
-    });
+      });
 
-    const pagenation = getPagenation(page, limit, prezentationsCount);
+      const pagenation = getPagenation(page, limit, prezentationsCount);
 
-    const prezentations = await prisma.chat.findMany({
-      where: {
-        name: {
-          contains: search,
+      const prezentations = await prisma.chat.findMany({
+        ...(await pagenation).db,
+        orderBy: {
+          created_at: "desc",
         },
-      },
-      ...(await pagenation).db,
-      orderBy: {
-        created_at: "desc",
-      },
-    });
+      });
 
-    let data = prezentations.map((item) => {
-      return prezenationRenderItems(item);
-    });
-    res.json({
-      data: data,
-      pagenation: (await pagenation).meta,
-    });
+      let data = prezentations.map((item) => {
+        return prezenationRenderItems(item);
+      });
+
+      return res.json({
+        data: data,
+        pagenation: (await pagenation).meta,
+      });
+    } else {
+      const prezentationsCount = await prisma.chat.count({
+        where: {
+          name: {
+            contains: search,
+          },
+        },
+      });
+
+      const pagenation = getPagenation(page, limit, prezentationsCount);
+
+      const prezentations = await prisma.chat.findMany({
+        where: {
+          name: {
+            contains: search,
+          },
+        },
+        ...(await pagenation).db,
+        orderBy: {
+          created_at: "desc",
+        },
+      });
+
+      let data = prezentations.map((item) => {
+        return prezenationRenderItems(item);
+      });
+
+      return res.json({
+        data: data,
+        pagenation: (await pagenation).meta,
+      });
+    }
   } catch (error) {
     console.log(error);
     next(error);
