@@ -76,11 +76,12 @@ export const getAuthToken = async (
       maxAge: 1000 * 60 * 60 * 24,
     });
 
-    res.status(200).json({
-      message: "User profile fetched successfully",
-      data: userData,
-      accessToken: generateTokens,
-    });
+    res.redirect("http://localhost:5173/");
+    // res.status(200).json({
+    //   message: "User profile fetched successfully",
+    //   data: userData,
+    //   accessToken: generateTokens,
+    // });
   } catch (error) {
     next(error);
   }
@@ -128,11 +129,9 @@ export const logout = async (
       maxAge: 0,
     });
 
-    // await res.status(200).json({
-    //   message: "User logged out successfully",
-    // });
-
-    res.redirect("http://localhost:5173/");
+    await res.status(200).json({
+      message: "User logged out successfully",
+    });
   } catch (error) {
     console.log(error);
     next(error);
