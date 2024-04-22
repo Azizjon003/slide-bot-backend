@@ -128,9 +128,11 @@ export const logout = async (
       maxAge: 0,
     });
 
-    await res.status(200).json({
-      message: "User logged out successfully",
-    });
+    // await res.status(200).json({
+    //   message: "User logged out successfully",
+    // });
+
+    res.redirect("http://localhost:5173/");
   } catch (error) {
     console.log(error);
     next(error);
