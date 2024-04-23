@@ -5,7 +5,7 @@ import { getAll, getOne } from "../controllers/prezentations.controller";
 const PrezentationRouter = Router();
 
 PrezentationRouter.use(AuthMiddleware);
-PrezentationRouter.get("/:id", getOne);
 PrezentationRouter.get("/search", getAll);
+PrezentationRouter.get("/:id", getOne);
 
 export default PrezentationRouter;
