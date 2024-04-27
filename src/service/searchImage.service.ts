@@ -1,4 +1,4 @@
-export const searchImages = async (query: string, i: number = 1) => {
+export const searchImages = async (query: string, i: number = 2) => {
   console.log(query, "query");
   let data = await fetch(
     `https://unsplash.com/ngetty/v3/search/images/creative?exclude_editorial_use_only=true&exclude_nudity=true&fields=display_set%2Creferral_destinations%2Ctitle&graphical_styles=photography&page_size=28&phrase=${query}&sort_order=best_match`,

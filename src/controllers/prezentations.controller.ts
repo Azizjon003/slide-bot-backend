@@ -142,7 +142,7 @@ const prezenationRenderItems = (item: any) => {
 
 const prezenationPlansRenderItems = (item: any) => {
   return {
-    name: item.name,
+    name: item.name.split("&&")[0],
     id: item.id,
     description: item.description.map((item: any) => {
       return {
