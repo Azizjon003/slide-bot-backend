@@ -93,12 +93,9 @@ export const getImages = async (query: string, limit = 5) => {
   return images;
 };
 
-export const getImagesNewSearch = async (query: string, limit = 2) => {
+export const getImagesNewSearch = async (query: string, limit = 0) => {
   const data = await fetch(
-    `https://unsplash.com/napi/search/photos?orientation=landscape&page=1&per_page=20&query=${query?.replace(
-      / /g,
-      "+"
-    )}&xp=semantic-search%3Acontrol`,
+    `https://unsplash.com/napi/search/photos?orientation=landscape&page=1&per_page=20&query=${query}&xp=semantic-search%3Acontrol`,
     {
       headers: {
         accept: "*/*",
@@ -125,7 +122,7 @@ export const getImagesNewSearch = async (query: string, limit = 2) => {
   let total = datas.total;
   if (datas.total === 0) {
     const resDatas = await fetch(
-      `https://unsplash.com/napi/search/photos?orientation=landscape&page=2&per_page=20&query=Nature&xp=semantic-search%3Acontrol`,
+      `https://unsplash.com/napi/search/photos?orientation=landscape&page=1&per_page=20&query=Nature&xp=semantic-search%3Acontrol`,
       {
         headers: {
           accept: "*/*",
