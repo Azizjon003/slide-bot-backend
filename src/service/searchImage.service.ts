@@ -122,7 +122,7 @@ export const getImagesNewSearch = async (query: string, limit = 0) => {
   );
 
   let datas = await data.json();
-
+  let total = datas.total;
   if (datas.total === 0) {
     const resDatas = await fetch(
       `https://unsplash.com/napi/search/photos?orientation=landscape&page=2&per_page=20&query=Nature&xp=semantic-search%3Acontrol`,
@@ -158,6 +158,6 @@ export const getImagesNewSearch = async (query: string, limit = 0) => {
     return urls;
   });
 
-  return datas[limit];
+  return datas[total === 0 ? 0 : limit];
 };
 // getImagesNewSearch("cyber_security");
