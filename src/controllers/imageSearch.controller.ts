@@ -4,6 +4,7 @@ import prisma from "../../prisma/prisma";
 import { CustomError } from "../utils/customError";
 import {
   getImages,
+  getImagesNewPixels,
   getImagesNewSearch,
   searchImages,
 } from "../service/searchImage.service";
@@ -52,7 +53,7 @@ export const chatGetImagesById = async (
 
     const planNameInImageSearch = chat?.plans[0]?.name.split("&&")[1];
 
-    const searchResult = await getImagesNewSearch(planNameInImageSearch);
+    const searchResult = await getImagesNewPixels(planNameInImageSearch);
 
     res.status(200).json({
       message: "Images fetched successfully",

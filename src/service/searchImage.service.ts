@@ -157,4 +157,65 @@ export const getImagesNewSearch = async (query: string, limit = 0) => {
 
   return datas[total === 0 ? 0 : limit];
 };
-// getImagesNewSearch("cyber_security");
+
+export const getImagesNewPixels = async (query: string, limit = 0) => {
+  const datas = await fetch(
+    `https://www.pexels.com/en-us/api/v3/search/photos?page=1&per_page=24&query=${query}&orientation=all&size=all&color=all&sort=popular&seo_tags=true`,
+    {
+      headers: {
+        authorization: "",
+        "content-type": "application/json",
+        "sec-ch-ua":
+          '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Linux"',
+        "secret-key": "H2jk9uKnhRmL6WPwh89zBezWvr",
+        "x-client-type": "react",
+        "x-forwarded-cf-connecting-ip": "",
+        "x-forwarded-cf-ipregioncode": "",
+        "x-forwarded-http_cf_ipcountry": "",
+        Referer: "https://www.pexels.com/search/Alisher%20Navoiy/",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+      },
+      body: null,
+      method: "GET",
+    }
+  );
+  let data = await datas.json();
+
+  let totalResults = data?.pagination?.total_results;
+
+  console.log(totalResults);
+  if (totalResults === 0) {
+    const dts = await fetch(
+      `https://www.pexels.com/en-us/api/v3/search/photos?page=1&per_page=24&query=Nature&orientation=all&size=all&color=all&sort=popular&seo_tags=true`,
+      {
+        headers: {
+          authorization: "",
+          "content-type": "application/json",
+          "sec-ch-ua":
+            '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": '"Linux"',
+          "secret-key": "H2jk9uKnhRmL6WPwh89zBezWvr",
+          "x-client-type": "react",
+          "x-forwarded-cf-connecting-ip": "",
+          "x-forwarded-cf-ipregioncode": "",
+          "x-forwarded-http_cf_ipcountry": "",
+          Referer: "https://www.pexels.com/search/Alisher%20Navoiy/",
+          "Referrer-Policy": "strict-origin-when-cross-origin",
+        },
+        body: null,
+        method: "GET",
+      }
+    );
+    data = await dts.json();
+  }
+  console.log(data);
+  let images = data.data.map((item: any) => {
+    return item?.attributes?.image?.medium;
+  });
+
+  return images[limit];
+};
+// getImagesNewPixels("Erali");
