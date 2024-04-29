@@ -1,4 +1,4 @@
-export const searchImages = async (query: string, i: number = 2) => {
+export const searchImages = async (query: string, i: number = 3) => {
   console.log(query, "query");
   let data = await fetch(
     `https://unsplash.com/ngetty/v3/search/images/creative?exclude_editorial_use_only=true&exclude_nudity=true&fields=display_set%2Creferral_destinations%2Ctitle&graphical_styles=photography&page_size=28&phrase=${query}&sort_order=best_match`,
@@ -24,7 +24,7 @@ export const searchImages = async (query: string, i: number = 2) => {
   );
 
   const response = await data.json();
-  console.log(response?.images[i]);
+  console.log(response);
 
   let images = response?.images[i]?.display_sizes[0]?.uri;
 
@@ -93,4 +93,71 @@ export const getImages = async (query: string, limit = 5) => {
   return images;
 };
 
-searchImages("cyber_security");
+export const getImagesNewSearch = async (query: string, limit = 0) => {
+  const data = await fetch(
+    `https://unsplash.com/napi/search/photos?orientation=landscape&page=1&per_page=20&query=${query.replace(
+      / /g,
+      "+"
+    )}&xp=semantic-search%3Acontrol`,
+    {
+      headers: {
+        accept: "*/*",
+        "accept-language": "en-US",
+        "sec-ch-ua":
+          '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Linux"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        cookie:
+          "require_cookie_consent=false; xp-semantic-search=control; uuid=405cb930-e535-11ee-bca3-7372f8ac6205; azk=405cb930-e535-11ee-bca3-7372f8ac6205; xp-better-load-more=plus-affiliates; azk-ss=true; _sp_ses.0295=*; _sp_id.0295=14635c6f-3bdd-48ce-93d9-8f4ca9911b81.1710772737.3.1714365071.1714240851.b4d33acc-edae-47c1-8d97-5a22d0fbc9ec.dff97392-ad57-4c0c-b23d-2d111830a232.a8ff887a-9271-4183-9fa0-579918dce73a.1714364081666.184",
+        Referer:
+          "https://unsplash.com/s/photos/cyber-security?orientation=landscape",
+        "Referrer-Policy": "origin-when-cross-origin",
+      },
+      body: null,
+      method: "GET",
+    }
+  );
+
+  let datas = await data.json();
+
+  if (datas.total === 0) {
+    const resDatas = await fetch(
+      `https://unsplash.com/napi/search/photos?orientation=landscape&page=2&per_page=20&query=Nature&xp=semantic-search%3Acontrol`,
+      {
+        headers: {
+          accept: "*/*",
+          "accept-language": "en-US",
+          "sec-ch-ua":
+            '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": '"Linux"',
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "same-origin",
+          cookie:
+            "require_cookie_consent=false; xp-semantic-search=control; uuid=405cb930-e535-11ee-bca3-7372f8ac6205; azk=405cb930-e535-11ee-bca3-7372f8ac6205; xp-better-load-more=plus-affiliates; azk-ss=true; _sp_ses.0295=*; _sp_id.0295=14635c6f-3bdd-48ce-93d9-8f4ca9911b81.1710772737.3.1714365071.1714240851.b4d33acc-edae-47c1-8d97-5a22d0fbc9ec.dff97392-ad57-4c0c-b23d-2d111830a232.a8ff887a-9271-4183-9fa0-579918dce73a.1714364081666.184",
+          Referer:
+            "https://unsplash.com/s/photos/cyber-security?orientation=landscape",
+          "Referrer-Policy": "origin-when-cross-origin",
+        },
+        body: null,
+        method: "GET",
+      }
+    );
+
+    datas = await datas.json();
+  }
+  datas = datas?.results.map((image: any) => {
+    let urls = `${
+      image?.urls?.raw.split("\\u0")[0]
+    }&q=80&w=600&auto=format&fit=crop&ixlib=rb-4.0.3`;
+
+    return urls;
+  });
+
+  return datas[limit];
+};
+// getImagesNewSearch("cyber_security");

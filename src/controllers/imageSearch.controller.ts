@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import { checkTokenBot, generateToken } from "../service/jwt.service";
 import prisma from "../../prisma/prisma";
 import { CustomError } from "../utils/customError";
-import { getImages, searchImages } from "../service/searchImage.service";
+import {
+  getImages,
+  getImagesNewSearch,
+  searchImages,
+} from "../service/searchImage.service";
 import { Validations } from "../validations/image.validation";
 import { GeneralValidations } from "../validations/general.validation";
 
@@ -48,7 +52,7 @@ export const chatGetImagesById = async (
 
     const planNameInImageSearch = chat?.plans[0]?.name.split("&&")[1];
 
-    const searchResult = await searchImages(planNameInImageSearch);
+    const searchResult = await getImagesNewSearch(planNameInImageSearch);
 
     res.status(200).json({
       message: "Images fetched successfully",
