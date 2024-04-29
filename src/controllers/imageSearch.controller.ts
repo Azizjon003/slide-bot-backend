@@ -53,7 +53,7 @@ export const chatGetImagesById = async (
 
     const planNameInImageSearch = chat?.plans[0]?.name.split("&&")[1];
 
-    const searchResult = await getImagesNewPixels(planNameInImageSearch);
+    const searchResult = await searchImages(planNameInImageSearch);
 
     res.status(200).json({
       message: "Images fetched successfully",
