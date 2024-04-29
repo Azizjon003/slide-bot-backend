@@ -30,7 +30,7 @@ export const searchImages = async (query: string, i: number = 3) => {
 
   if (!images) {
     let data = await fetch(
-      `https://unsplash.com/ngetty/v3/search/images/creative?exclude_editorial_use_only=true&exclude_nudity=true&fields=display_set%2Creferral_destinations%2Ctitle&graphical_styles=photography&page_size=28&phrase=cyber_security&sort_order=best_match`,
+      `https://unsplash.com/ngetty/v3/search/images/creative?exclude_editorial_use_only=true&exclude_nudity=true&fields=display_set%2Creferral_destinations%2Ctitle&graphical_styles=photography&page_size=28&phrase=nature&sort_order=best_match`,
       {
         headers: {
           accept: "*/*",
