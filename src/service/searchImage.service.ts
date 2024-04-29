@@ -24,9 +24,9 @@ export const searchImages = async (query: string, i: number = 2) => {
   );
 
   const response = await data.json();
-  console.log(response);
+  console.log(response?.images[i]);
 
-  let images = response?.images[i]?.display_sizes[2]?.uri;
+  let images = response?.images[i]?.display_sizes[0]?.uri;
 
   if (!images) {
     let data = await fetch(
@@ -52,7 +52,7 @@ export const searchImages = async (query: string, i: number = 2) => {
       }
     );
     const response = await data.json();
-    images = response?.images[i]?.display_sizes[2]?.uri;
+    images = response?.images[i]?.display_sizes[0]?.uri;
   }
 
   return images;
@@ -85,10 +85,12 @@ export const getImages = async (query: string, limit = 5) => {
   const response = await data.json();
   console.log(response);
   let images = response?.images.map((image: any) => {
-    return image?.display_sizes[2]?.uri;
+    return image?.display_sizes[0]?.uri;
   });
 
   images = images.slice(0, limit);
 
   return images;
 };
+
+searchImages("cyber_security");
