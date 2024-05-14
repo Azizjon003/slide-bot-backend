@@ -10,6 +10,7 @@ import {
 } from "../service/searchImage.service";
 import { Validations } from "../validations/image.validation";
 import { GeneralValidations } from "../validations/general.validation";
+import { Bing } from "../service/searchImageBing";
 
 export const getImagesApi = async (
   req: Request,
@@ -61,6 +62,42 @@ export const chatGetImagesById = async (
         Name: planNameInImageSearch,
         image: searchResult,
       },
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+export const getImagesNewSearchApi = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { q, type } = await Validations.queryImageSearchValidations(
+      req?.query
+    );
+
+    if (type === "un") {
+      const searches = await searchImages(q);
+      return res.status(200).json({
+        message: "Images fetched successfully",
+        data: searches,
+      });
+    } else if (type === "bing") {
+      const bing = new Bing(q, 10, "off", 10000, "photo");
+
+      const imageUrls = await bing.run();
+
+      return res.status(200).json({
+        message: "Images fetched successfully",
+        data: imageUrls,
+      });
+    }
+    res.status(200).json({
+      message: "Images fetched successfully",
+      data: [],
     });
   } catch (error) {
     console.log(error);
