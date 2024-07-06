@@ -99,7 +99,7 @@ export const getOne = async (
       throw new CustomError("data not found", 404);
     }
 
-    console.log(req.session);
+    console.log(req.session, req?.session?.user?.user.id);
 
     const plansAndDescription = await prisma.plan.findMany({
       where: {
@@ -117,7 +117,7 @@ export const getOne = async (
       return prezenationPlansRenderItems(item);
     });
 
-    await getViews(req?.session?.user?.user_id, id);
+    await getViews(req?.session?.user?.user.id, id);
 
     const [likes, views, reviews] = await Promise.allSettled([
       await prisma.likes.count({
