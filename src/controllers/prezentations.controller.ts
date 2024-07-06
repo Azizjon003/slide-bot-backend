@@ -99,6 +99,8 @@ export const getOne = async (
       throw new CustomError("data not found", 404);
     }
 
+    console.log(req.session);
+
     const plansAndDescription = await prisma.plan.findMany({
       where: {
         chat_id: id,
