@@ -5,6 +5,7 @@ import { CustomError } from "../utils/customError";
 import { Validations } from "../validations/prezentation.validations";
 import { getPagenation } from "../service/pagenation.service";
 import { GeneralValidations } from "../validations/general.validation";
+import { getViews } from "../service/views.service";
 
 export const getAll = async (
   req: Request,
@@ -113,6 +114,8 @@ export const getOne = async (
     let renderPlans = plansAndDescription.map((item) => {
       return prezenationPlansRenderItems(item);
     });
+
+    await getViews(req?.session?.user?.id, id);
 
     res.status(200).json({
       data: {

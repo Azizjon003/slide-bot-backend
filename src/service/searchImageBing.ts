@@ -78,11 +78,12 @@ export class Bing {
         this.logger.info(`\n\n[!!] Indexing page: ${this.pageCounter + 1}\n`);
       }
 
-      const requestUrl = `https://www.bing.com/images/async?q=${encodeURIComponent(
-        this.query
-      )}&first=${this.pageCounter}&count=${this.limit}&adlt=${this.adult}&qft=${
-        this.filter ? this.getFilter(this.filter) : ""
-      }`;
+      // const requestUrl = `https://www.bing.com/images/async?q=${encodeURIComponent(
+      //   this.query
+      // )}&first=${this.pageCounter}&count=${this.limit}&adlt=${this.adult}&qft=${
+      //   this.filter ? this.getFilter(this.filter) : ""
+      // }`;
+      const requestUrl = `https://www.bing.com/images/search?q=${this.query}&qs=n&form=QBIR&sp=-1&lq=0&sc=0-0&cvid=12AFCBAE28AF483CB1BAAAED9EE50B9F&ghsh=0&ghacc=0&first=1`;
       this.logger.debug(requestUrl);
 
       const response = await axios.get(requestUrl, {
@@ -124,6 +125,10 @@ export class Bing {
 
 // Example usage
 
-// const bing = new Bing("cats", 10, "off", 10000, "photo");
-// const imageUrls = await bing.run();
-// console.log(JSON.stringify(imageUrls, null, 2));
+const test = async () => {
+  const bing = new Bing("cats", 10, "off", 10000, "photo");
+  const imageUrls = await bing.run();
+  console.log(JSON.stringify(imageUrls, null, 2));
+};
+
+test();
