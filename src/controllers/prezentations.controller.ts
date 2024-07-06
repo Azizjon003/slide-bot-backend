@@ -117,7 +117,8 @@ export const getOne = async (
       return prezenationPlansRenderItems(item);
     });
 
-    await getViews(req?.session?.user?.user.id, id);
+    const userId = req?.session?.user?.user.id;
+    await getViews(userId, id);
 
     const [likes, views, reviews] = await Promise.allSettled([
       await prisma.likes.count({
@@ -141,7 +142,7 @@ export const getOne = async (
     const isLike = await prisma.likes.findFirst({
       where: {
         chat_id: id,
-        user_id: req?.session?.user?.id,
+        user_id: userId,
       },
     });
 
