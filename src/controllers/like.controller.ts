@@ -13,12 +13,25 @@ export const LikePost = async (
     const { q, id } = await Validations.createLikeValidation(req.query);
     const userId = req.session?.user?.id;
 
+    let isLike = await prisma.likes.findFirst({
+      where: {
+        chat_id: id,
+        user_id: userId,
+      },
+    });
+    if (!isLike) {
+      isLike = await prisma.likes.create({
+        data: {
+          user_id: userId,
+          chat_id: id,
+          like: q,
+        },
+      });
+    }
+
     const like = await prisma.likes.upsert({
       where: {
-        user_id_chat_id: {
-          chat_id: id,
-          user_id: userId,
-        },
+        id: isLike.id,
       },
       update: {
         like: q,
