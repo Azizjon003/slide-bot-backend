@@ -117,6 +117,32 @@ export const getOne = async (
 
     await getViews(req?.session?.user?.id, id);
 
+    const [likes, views, reviews] = await Promise.allSettled([
+      await prisma.likes.count({
+        where: {
+          chat_id: id,
+        },
+      }),
+      await prisma.views.count({
+        where: {
+          chat_id: id,
+        },
+      }),
+
+      await prisma.reviews.count({
+        where: {
+          chat_id: id,
+        },
+      }),
+    ]);
+
+    const isLike = await prisma.likes.findFirst({
+      where: {
+        chat_id: id,
+        user_id: req?.session?.user?.id,
+      },
+    });
+
     res.status(200).json({
       data: {
         id: prezentationData.id,
@@ -125,6 +151,14 @@ export const getOne = async (
         lang: prezentationData.lang,
         created_at: prezentationData.created_at,
         plans: renderPlans,
+        otherData: {
+          likes: likes,
+          views: views,
+          reviews: reviews,
+        },
+        ownLike: {
+          ...isLike,
+        },
       },
     });
   } catch (error) {
