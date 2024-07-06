@@ -11,7 +11,7 @@ export const LikePost = async (
 ) => {
   try {
     const { q, id } = await Validations.createLikeValidation(req.query);
-    const userId = req.session?.user?.id;
+    const userId = req.session?.user?.user_id;
 
     let isLike = await prisma.likes.findFirst({
       where: {

@@ -12,7 +12,7 @@ export const createReview = async (
 ) => {
   try {
     const { review, id } = await Validations.createReviewValidation(req.body);
-    const userId = req.session?.user?.id;
+    const userId = req.session?.user?.user_id;
 
     const reviewData = await prisma.reviews.create({
       data: {
@@ -61,7 +61,7 @@ export const deleteReviews = async (
 ) => {
   try {
     const id = await GeneralValidations.idValidations(req.query.id);
-    const userId = req.session?.user?.id;
+    const userId = req.session?.user?.user_id;
 
     const review = await prisma.reviews.delete({
       where: {

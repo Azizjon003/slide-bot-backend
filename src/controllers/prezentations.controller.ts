@@ -117,7 +117,7 @@ export const getOne = async (
       return prezenationPlansRenderItems(item);
     });
 
-    await getViews(req?.session?.user?.id, id);
+    await getViews(req?.session?.user?.user_id, id);
 
     const [likes, views, reviews] = await Promise.allSettled([
       await prisma.likes.count({
